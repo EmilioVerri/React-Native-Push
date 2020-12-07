@@ -5,6 +5,29 @@ import * as Notifications from 'expo-notifications';
 //permessi per IOS
 import * as Permissions from 'expo-permissions';
 
+
+
+/**
+ * definisco all'esterno questo setNotificationHandler
+ * dentro a questo oggetto definiamo come gestire le notifiche in arrivo se l'app è in esecuzione
+ * handleNotification avremo una funzione che ritorna un oggetto che dice al sistema operativo cosa dovrebbe accadere quando si riceve una notifica
+ * quando l'app è in esecuzione, nella return diciamo al sistema operativo cosa deve fare prima che la notifica venga fatta vedere all'utente
+ * mettiamo handleNotification async così ritorna una promessa
+ */
+Notifications.setNotificationHandler({
+    handleNotification:async()=>{
+        /**ritorniamo un oggetto che descrive il comportamento del sistema operativo 
+         * mettiamo che deve mostrare un alert lo mostra anche se l'app è chiusa ma voglio mostrarlo quando l'app è in esecuzione
+         * vediamo la notifica anche se siamo dentro all'app, mettiamo anche un suono 
+         * 
+        */
+        return {
+            shouldShowAlert:true,
+            shouldPlaySound:true
+        };
+    }
+});
+
 export default function App() {
 
     useEffect(()=>{
