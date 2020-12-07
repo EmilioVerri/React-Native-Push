@@ -56,21 +56,32 @@ export default function App() {
     }, []);
 
     useEffect(()=>{
+        /**salviamo nella constante backgroundSubscription
+         * creiamo un altro metodo per reagire alle notifiche quando l'applicazione è stata chiusa
+         * definisce una funzione che deve essere eseguita quando un utente interagisce con una notifica mentre app non era in esecuzione
+         * otteniamo un oggetto response
+        */
+        const backgroundSubscription=Notifications.addNotificationResponseReceivedListener(response=>{
+            console.log(response);//otteniamo un oggetto risposta
+        });
+
+
         /**
-         * salviamo tutto dentro alla constante subscription
+         * salviamo tutto dentro alla constante foregroundSubscription
          * metodo che ci consente di definire una funzione alla fine, viene eseguito quando si
          * riceve una notifica in arrivo e l'app è in esecuzione
          * 1 argomento notification 
         */
-        const subscription=Notifications.addNotificationReceivedListener(notification=>{
-            console.log(notification);
+        const foregroundSubscription=Notifications.addNotificationReceivedListener(notification=>{
+            console.log(notification);//qui otteniamo una notifica
         })
         /**
          * ritorniamo una funzione, sarà una funzione di pulizia che viene eseguita in modo automatico ogni volta che anciamo questo effetto
          * 
          */
-        return ()=>{//mettiamo una remove della constante subscription
-            subscription.remove();
+        return ()=>{//mettiamo una remove della constante backgroundSubscription e foregroundSubscription
+            backgroundSubscription.remove();
+            foregroundSubscription.remove();
         }
     },[]);
 
