@@ -55,6 +55,25 @@ export default function App() {
         });
     }, []);
 
+    useEffect(()=>{
+        /**
+         * salviamo tutto dentro alla constante subscription
+         * metodo che ci consente di definire una funzione alla fine, viene eseguito quando si
+         * riceve una notifica in arrivo e l'app è in esecuzione
+         * 1 argomento notification 
+        */
+        const subscription=Notifications.addNotificationReceivedListener(notification=>{
+            console.log(notification);
+        })
+        /**
+         * ritorniamo una funzione, sarà una funzione di pulizia che viene eseguita in modo automatico ogni volta che anciamo questo effetto
+         * 
+         */
+        return ()=>{//mettiamo una remove della constante subscription
+            subscription.remove();
+        }
+    },[]);
+
 
 
     const triggerNotificationHandler=()=>{
@@ -63,6 +82,7 @@ export default function App() {
             content:{//è un oggetto con varie opzioni
                 title:'My first local notification',
                 body:'This is the first local notification we are sending!',
+                data:{mySpecialData:'Some text'}
             },
             trigger:{//trigger è un oggetto in cui si definisce quando inviare la notifica
                 seconds:5 //secondi prima che la notifica venga visualizzata
