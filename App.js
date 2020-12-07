@@ -7,30 +7,34 @@ import * as Permissions from 'expo-permissions';
 
 export default function App() {
 
-    const triggerNotificationHandler=()=>{
+    useEffect(()=>{
+        /**
+         * la proprietà statusObj ha un valore che è status
+         * CHIEDE la possibilità di inviare le notifiche sia per android che ios
+         * con then() vediamo la stato, se abbiamo granted come stato non abbiamo bisogno di continuare
+         * se non abbiamo granted allora possiamo continuare e richiediamo il permesso alle notifiche
+         */
+        /**
+         * con un then sotto chiediamo ancora lo status, se lo stato non è ancora granted mettiamo un alert e una return
+         * se lo status sarà granted allora saremo a posto 
+         */
+        Permissions.getAsync(Permissions.NOTIFICATIONS)
+        .then((statusObj) => {
+          if (statusObj.status !== 'granted') {
+            return Permissions.askAsync(Permissions.NOTIFICATIONS);
+          }
+          return statusObj;//così che il prossimo blocco then è solo per i casi in cui avevamo il permesso
+        })
+        .then((statusObj) => {
+          if (statusObj.status !== 'granted') {
+            return;
+          }
+        });
+    }, []);
 
-        useEffect(async()=>{
-            /**
-             * la proprietà statusObj ha un valore che è status
-             * CHIEDE la possibilità di inviare le notifiche sia per android che ios
-             * con then() vediamo la stato, se abbiamo granted come stato non abbiamo bisogno di continuare
-             * se non abbiamo granted allora possiamo continuare e richiediamo il permesso alle notifiche
-             */
-            /**
-             * con un then sotto chiediamo ancora lo status, se lo stato non è ancora granted mettiamo un alert e una return
-             * se lo status sarà granted allora saremo a posto 
-             */
-            Permissions.getAsync(Permissions.NOTIFICATIONS).then(statusObj=>{
-                if(statusObj.status==='!granted'){
-                    return Permissions.askAsync(Permissions.NOTIFICATIONS);
-                }
-                return statusObj;//così che il prossimo blocco then è solo per i casi in cui avevamo il permesso
-            }).then(statusObj=>{
-                if(statusObj.status !=='granted'){
-                    return;
-                }
-            }); 
-        },[])
+
+
+    const triggerNotificationHandler=()=>{
         /**metodo che ci aiuta a programmare una notifica con questo crei una notifica locale */
         Notifications.scheduleNotificationAsync({
             content:{//è un oggetto con varie opzioni
@@ -38,7 +42,7 @@ export default function App() {
                 body:'This is the first local notification we are sending!',
             },
             trigger:{//trigger è un oggetto in cui si definisce quando inviare la notifica
-                seconds:2 //secondi prima che la notifica venga visualizzata
+                seconds:5 //secondi prima che la notifica venga visualizzata
             }
         });
     }
