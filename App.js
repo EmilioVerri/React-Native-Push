@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import React,{useEffect} from 'react';
+import React,{useEffect,useState} from 'react';
 import { StyleSheet, Button, View } from 'react-native';
 import * as Notifications from 'expo-notifications';
 //permessi per IOS
@@ -29,6 +29,9 @@ Notifications.setNotificationHandler({
 });
 
 export default function App() {
+
+    //definisco uno useState per gestire il token
+    const [pushToken,setPushToken]=useState();
 
     useEffect(()=>{
         /**
@@ -67,6 +70,7 @@ export default function App() {
              */
             console.log(response);//questo console.log lo dobbiamo mettere sempre per vedere il token per fare i test
             const token=response.data;
+            setPushToken(token);//salvo il token dentro alla setPushToken
         
         })
         .catch((err)=>{
@@ -121,6 +125,25 @@ export default function App() {
                 seconds:5 //secondi prima che la notifica venga visualizzata
             }
         });*/
+        /**mandiamo una richiesta http. Faccio una fetch su questo url 
+         * e dobbiamo configurare questa richiesta con il secondo argomento il metodo post e l'header
+         * e il body perchè come nel sito expo per testare le notifiche c'erano tante cose da configurare
+         * inviamo una richiesta http al server che poi farà tutto lui
+        */
+        fetch('https://exp.host/--/api/v2/push/send',{
+            method:'POST',
+            headers:{
+                'Accept':'application/json',
+                'Accept-Encoding':'gzip, deflate',
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify({
+                to:pushToken, //necessita del token questa proprietà
+                data:{extraData:'Some data'},//impostiamo un data
+                title:'Sent via the app',
+                body:'This push notification was sent via the app'
+            })
+        });
     }
 
 
