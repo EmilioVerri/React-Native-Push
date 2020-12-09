@@ -60,9 +60,14 @@ export default function App() {
             console.log('Getting token');
             return Notifications.getExpoPushTokenAsync();
         })
-        .then(data=>{
-            /**avremo come argomento data */
-        console.log(data);
+        .then(response=>{
+            /**avremo come argomento data, qua recuperiamo il token e lo salviamo dentro alla constante token
+             * andiamo a prenderlo da response e prendiamo il valore data visto dal console log dove c'è dentro il token
+             * quando testiamo la notifica userà gli stessi metoni per background e per foreground 
+             */
+            console.log(response);//questo console.log lo dobbiamo mettere sempre per vedere il token per fare i test
+            const token=response.data;
+        
         })
         .catch((err)=>{
             console.log(err);
