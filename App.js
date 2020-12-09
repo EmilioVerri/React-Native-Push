@@ -50,9 +50,24 @@ export default function App() {
         })
         .then((statusObj) => {
           if (statusObj.status !== 'granted') {
-            return;
+            throw new Error('Permission not granted!');
+            /*metto questo senò andrebbe avanti ad eseguire il blocco then sotto
+            il codice verrà eseguito solo se disponiamo di autorizzazione*/
           }
-        });
+        })
+        .then(()=>{
+            /** getExpoPushTokenAsync ci serve per ottenere un token push */
+            console.log('Getting token');
+            return Notifications.getExpoPushTokenAsync();
+        })
+        .then(data=>{
+            /**avremo come argomento data */
+        console.log(data);
+        })
+        .catch((err)=>{
+            console.log(err);
+            return null;
+        })
     }, []);
 
     useEffect(()=>{
@@ -89,7 +104,9 @@ export default function App() {
 
     const triggerNotificationHandler=()=>{
         /**metodo che ci aiuta a programmare una notifica con questo crei una notifica locale */
-        Notifications.scheduleNotificationAsync({
+      /* 
+      NON SARA' PIU' COSI' PER LE NOTIFICHE PUSH
+       Notifications.scheduleNotificationAsync({
             content:{//è un oggetto con varie opzioni
                 title:'My first local notification',
                 body:'This is the first local notification we are sending!',
@@ -98,7 +115,7 @@ export default function App() {
             trigger:{//trigger è un oggetto in cui si definisce quando inviare la notifica
                 seconds:5 //secondi prima che la notifica venga visualizzata
             }
-        });
+        });*/
     }
 
 
