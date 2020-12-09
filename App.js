@@ -67,10 +67,13 @@ export default function App() {
             /**avremo come argomento data, qua recuperiamo il token e lo salviamo dentro alla constante token
              * andiamo a prenderlo da response e prendiamo il valore data visto dal console log dove c'è dentro il token
              * quando testiamo la notifica userà gli stessi metoni per background e per foreground 
+             * per gestire i token di tutte le applicazioni faccio una fetch per mandare una richiesta http alla tua API dove c'è una logica che riceve quel token e o archivia in un database
+             * ogni utente così inviarà anche il suo push token e non solo email e la password sul mio DB
              */
             console.log(response);//questo console.log lo dobbiamo mettere sempre per vedere il token per fare i test
             const token=response.data;
             setPushToken(token);//salvo il token dentro alla setPushToken
+            fetch('https://your-own-api.com/');
         
         })
         .catch((err)=>{
@@ -125,7 +128,8 @@ export default function App() {
                 seconds:5 //secondi prima che la notifica venga visualizzata
             }
         });*/
-        /**mandiamo una richiesta http. Faccio una fetch su questo url 
+        /**notifica push inviata con i server di expo:
+         * mandiamo una richiesta http. Faccio una fetch su questo url 
          * e dobbiamo configurare questa richiesta con il secondo argomento il metodo post e l'header
          * e il body perchè come nel sito expo per testare le notifiche c'erano tante cose da configurare
          * inviamo una richiesta http al server che poi farà tutto lui
